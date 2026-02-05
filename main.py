@@ -3,8 +3,8 @@ import random
 import sys
 
 # --- Constants ---
-SCREEN_WIDTH = 1200
-SCREEN_HEIGHT = 800
+SCREEN_WIDTH = 1500
+SCREEN_HEIGHT = 700
 FPS = 60
 
 # Neon Color Palette
@@ -123,8 +123,8 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_w]: accel.y = -PLAYER_ACCEL
         if keys[pygame.K_s]: accel.y = PLAYER_ACCEL
         
-        # Shooting: Mouse Right Click
-        if mouse[2]: # Right click
+        # Shooting: Mouse left Click
+        if mouse[0]: # left click
             self.shoot()
             
         if accel.length() > 0:
