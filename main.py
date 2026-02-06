@@ -33,8 +33,8 @@ COLOR_POWERUP_SPREAD = (0, 255, 150)
 COLOR_COMBO_TEXT = (255, 255, 100)
 
 # Game Physics
-PLAYER_MAX_SPEED = 750
-PLAYER_ACCEL = 5000
+PLAYER_MAX_SPEED = 1000
+PLAYER_ACCEL = 7000
 PLAYER_FRICTION = 12
 BULLET_SPEED = 900
 ENEMY_MIN_SPEED = 120
@@ -385,9 +385,16 @@ class Enemy(pygame.sprite.Sprite):
         # Hit flash effect
         if self.hit_flash > 0:
             self.hit_flash -= dt * 5
-            flash_surf = self.original_image.copy()
-            flash_surf.fill((255, 255, 255, int(self.hit_flash * 255)), special_flags=pygame.BLEND_RGB_ADD)
-            self.image = flash_surf
+            if self.hit_flash > 0:
+                flash_surf = self.original_image.copy()
+                alpha = max(0, min(255, int(self.hit_flash * 255)))
+                try:
+                    flash_surf.fill((255, 255, 255, alpha), special_flags=pygame.BLEND_RGB_ADD)
+                    self.image = flash_surf
+                except ValueError:
+                     self.image = self.original_image.copy()
+            else:
+                self.image = self.original_image.copy()
         else:
             self.image = self.original_image.copy()
         
