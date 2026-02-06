@@ -95,6 +95,7 @@ class Bullet(pygame.sprite.Sprite):
         self.image.fill(COLOR_BULLET)
         self.image = self.image.convert()
         self.rect = self.image.get_rect(center=(x, y))
+        self.mask = pygame.mask.from_surface(self.image)
         self.display_y = float(self.rect.y)
 
     def update(self, dt):
@@ -111,6 +112,7 @@ class Enemy(pygame.sprite.Sprite):
         pygame.draw.polygon(self.image, COLOR_ENEMY, [(15, 0), (30, 15), (15, 30), (0, 15)])
         pygame.draw.polygon(self.image, (255, 200, 255), [(15, 5), (25, 15), (15, 25), (5, 15)])
         self.image = self.image.convert_alpha()
+        self.mask = pygame.mask.from_surface(self.image)
         
         self.rect = self.image.get_rect(center=(random.randint(20, SCREEN_WIDTH-20), -20))
         
@@ -144,6 +146,7 @@ class Player(pygame.sprite.Sprite):
         pygame.draw.polygon(self.image, COLOR_PLAYER, [(20, 0), (40, 50), (20, 40), (0, 50)])
         pygame.draw.polygon(self.image, (200, 255, 255), [(20, 10), (30, 45), (20, 35), (10, 45)])
         self.image = self.image.convert_alpha()
+        self.mask = pygame.mask.from_surface(self.image)
         
         self.rect = self.image.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 100))
         
@@ -274,7 +277,7 @@ class Game:
             self.shake_timer -= dt
         
         # Collision: Bullet -> Enemy
-        hits = pygame.sprite.groupcollide(self.enemies, self.bullets, True, True)
+        hits = pygame.sprite.groupcollide(self.enemies, self.bullets, True, True, pygame.sprite.collide_mask)
         for enemy in hits:
             self.score += 100
             self.trigger_shake(0.2)
@@ -285,7 +288,7 @@ class Game:
                 Particle(self.all_sprites, enemy.rect.centerx, enemy.rect.centery, COLOR_ENEMY)
         
         # Collision: Enemy -> Player
-        hits = pygame.sprite.spritecollide(self.player, self.enemies, False)
+        hits = pygame.sprite.spritecollide(self.player, self.enemies, False, pygame.sprite.collide_mask)
         if hits:
             self.game_over()
 
